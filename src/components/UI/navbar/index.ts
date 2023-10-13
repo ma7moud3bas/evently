@@ -1,0 +1,1 @@
+export { default, type Props as NavbarProps } from "./Navbar"
