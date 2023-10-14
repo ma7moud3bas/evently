@@ -3,13 +3,13 @@ import Image from "next/image";
 import { ComponentProps, Fragment, useState } from "react";
 import Link from "../link/Link";
 import classNames from "classnames";
+
 export type Props = ComponentProps<"aside"> & {
     sidebarOpen: boolean
     setSidebarOpen: (open: boolean) => void
 }
 
 type Link = {
-
     copy: string;
     iconSrc: string;
     iconAlt: string;
@@ -73,7 +73,7 @@ const initialLinks: Link[] = [
 ]
 
 export default function Sidebar(props: Props) {
-    const { sidebarOpen, setSidebarOpen } = props
+    const { sidebarOpen, setSidebarOpen, ...rest } = props
     const [links, setLinks] = useState(initialLinks)
 
     const handleExpand = (index: number) => {
@@ -91,7 +91,7 @@ export default function Sidebar(props: Props) {
         if (!sidebarOpen) setSidebarOpen(true)
     }
     return (
-        <aside className="h-full bg-gray-800 pt-5 flex flex-col justify-between max-md:hidden" {...props}>
+        <aside className={classNames("min-h-full bg-gray-800 pt-5 flex flex-col justify-between max-md:hidden ", rest.className)} {...rest}>
             <div className="px-4">
                 {links.map((link, index) => (
                     <Fragment key={index}>

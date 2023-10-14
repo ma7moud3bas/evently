@@ -10,13 +10,11 @@ interface Props {
 const MainLayout: FC<Props> = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(true)
     return (
-        <div className="h-full w-full relative">
+        <div className="h-screen w-full relative">
             <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
             <main className="flex hNav w-full">
                 <Sidebar {...{ sidebarOpen, setSidebarOpen }} />
-                <div className="page-content">
-                    {children}
-                </div>
+                {children}
             </main>
         </div>
     )

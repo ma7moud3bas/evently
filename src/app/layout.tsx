@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={classNames(roboto.className, "h-full")}>
+      <body className={classNames(roboto.className, "min-h-screen")}>
         <MainLayout>
           {children}
         </MainLayout>
