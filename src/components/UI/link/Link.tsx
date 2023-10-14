@@ -7,7 +7,6 @@ export default function Link(props: Props) {
     return (
         <ButtonOrLink
             {...props}
-
         />
     );
 }
