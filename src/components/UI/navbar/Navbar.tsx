@@ -19,7 +19,7 @@ export default function Navbar(props: Props) {
                 <Link href="/">
                     <span className={classNames("text-2xl text-white", JosefinFont.className)}>Evently</span>
                 </Link>
-                <Image onClick={() => setSidebarOpen(!!!sidebarOpen)} className={`cursor-pointer ${sidebarOpen ? "rotate-180" : ""}`} src="/assets/images/chevron-circle-left.svg" width="24" height="24" alt="arrow left"></Image>
+                <Image onClick={() => setSidebarOpen(!sidebarOpen)} className={`cursor-pointer ${sidebarOpen ? "" : "rotate-180"}`} src="/assets/images/chevron-circle-left.svg" width="24" height="24" alt="arrow left"></Image>
             </div>
 
             <div className="event-type px-4 py-1.5 flex items-center justify-between bg-primary-700 w-[380px] max-md:hidden">

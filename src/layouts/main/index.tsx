@@ -13,7 +13,7 @@ const MainLayout: FC<Props> = ({ children }) => {
         <div className="h-full w-full relative">
             <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
             <main className="flex hNav w-full">
-                <Sidebar open={sidebarOpen} />
+                <Sidebar {...{ sidebarOpen, setSidebarOpen }} />
                 <div className="page-content">
                     {children}
                 </div>
