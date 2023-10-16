@@ -13,6 +13,7 @@
   "dependencies": {
     "classnames": "^2.3.2",
     "cva": "npm:class-variance-authority@^0.7.0",
+    "formik": "^2.4.5",
     "lodash.memoize": "^4.1.2",
     "next": "13.5.4",
     "react": "^18",

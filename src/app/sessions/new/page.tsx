@@ -5,9 +5,8 @@ import PageBar from "@/components/UI/pageBar";
 import { FormEvent, useRef } from "react";
 
 export default function NewSession() {
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        e.stopPropagation()
+    const handleSubmit = (values: { [key: string]: string }) => {
+        console.log(values)
     }
     const formRef = useRef<HTMLFormElement>(null)
     return (

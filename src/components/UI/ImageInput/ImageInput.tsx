@@ -4,19 +4,20 @@ import { ComponentPropsWithoutRef, useRef, useState } from "react"
 import { Tooltip } from 'react-tooltip'
 import 'react-tooltip/dist/react-tooltip.css';
 import { useCallback } from 'react';
-import { Accept, useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 
 export type Props = ({
     label: string
     placeholder?: string
     tooltip?: string
     setUrl: (url: string) => void
+    preview?: string | ArrayBuffer | null
 } & ComponentPropsWithoutRef<'input'>)
 
 const ImageInput = (props: Props) => {
-    const { type, placeholder, className, label, setUrl } = props
+    const { type, placeholder, className, label, setUrl, ...rest } = props
     const imageRef = useRef(null)
-    const [preview, setPreview] = useState<string | ArrayBuffer | null>(null);
+    const [preview, setPreview] = useState<string | ArrayBuffer | null>(props.preview || null);
     const [file, setFile] = useState<File | undefined>();
     const [loading, setLoading] = useState(false)
 
@@ -58,7 +59,7 @@ const ImageInput = (props: Props) => {
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        accept: Object.fromEntries(props.accept?.split(", ").map((type) => [type, [type.replace("image/", ".")]]) || []) as unknown as Accept
+        accept: Object.fromEntries(props.accept?.split(", ").map((type) => [type, [type.replace("image/", ".")]]) || [])
     });
 
     function handleOnChange(e: React.FormEvent<HTMLInputElement>) {
@@ -86,7 +87,7 @@ const ImageInput = (props: Props) => {
                     </div>
                 }
             </div>
-            <input {...getInputProps()} onChange={handleOnChange} ref={imageRef} className="hidden" {...props} type={type} placeholder={placeholder} accept="image/png, image/gif, image/jpeg, image/svg" />
+            <input {...getInputProps()} onChange={handleOnChange} ref={imageRef} className="hidden" {...rest} type={type} placeholder={placeholder} accept="image/png, image/gif, image/jpeg, image/svg" />
             <div {...getRootProps()} className={classNames({ "p-3 pt-3.5": !(loading || preview) }, "h-48 w-full bg-gray-800 border border-gray-400 focus:border-gray-200 text-gray-500 leading-6 focus:outline-none focus:ring-0 cursor-pointer")}>
                 {preview ?
                     <div className="w-full h-full">

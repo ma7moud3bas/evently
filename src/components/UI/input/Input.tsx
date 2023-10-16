@@ -6,6 +6,9 @@ import 'react-tooltip/dist/react-tooltip.css';
 
 type InputType = "text" | "password" | "email" | "number" | "date" | "time" | "datetime-local" | "search" | "tel" | "url"  // just to limit the input types
 export type Props = ({
+    name: string
+    value: string
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     type: InputType
     label: string
     placeholder?: string
@@ -13,6 +16,8 @@ export type Props = ({
     tooltip?: string
 } & ComponentPropsWithoutRef<'input'>) |
     ({
+        name: string
+        value: string
         type: "textarea"
         label: string
         placeholder?: string
@@ -22,7 +27,6 @@ export type Props = ({
 
 const Input = (props: Props) => {
     const { type, placeholder, className, inputClassName, label } = props
-
     return (
         <div className={classNames("w-full flex flex-col gap-y-2.5", className)}>
             <div className="w-full flex items-center justify-between">
@@ -39,7 +43,7 @@ const Input = (props: Props) => {
                 type === "textarea" ?
                     <textarea {...props} className={classNames("w-full p-3 pt-3.5 bg-gray-800 border border-gray-400 focus:border-gray-200 text-white placeholder:text-gray-500 leading-6 focus:outline-none focus:ring-0 ", inputClassName)} placeholder={placeholder} />
                     :
-                    <input {...props} className={classNames("w-full p-3 pt-3.5 bg-gray-800 border border-gray-400 focus:border-gray-200 text-white placeholder:text-gray-500 leading-6 focus:outline-none focus:ring-0 ", inputClassName)} type={type} placeholder={placeholder} />
+                    <input  {...props} className={classNames("w-full p-3 pt-3.5 bg-gray-800 border border-gray-400 focus:border-gray-200 text-white placeholder:text-gray-500 leading-6 focus:outline-none focus:ring-0 ", inputClassName)} type={type} placeholder={placeholder} />
             }
         </div>
     )
