@@ -12,4 +12,9 @@ body {
 .hNav {
   height:calc(100vh - 57px)
 }
-
+input[type="date"]::-webkit-calendar-picker-indicator, 
+input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  margin-bottom: -14px;
+  background: url(/assets/images/chevron-down-dark.svg) no-repeat;
+}

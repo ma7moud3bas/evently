@@ -8,13 +8,14 @@ export interface Props {
     title: string
     backButton?: boolean
     backButtonText?: string
+    backLink?: string
 }
 
 export default function PageBar(props: Props) {
-    const { title, backButton, backButtonText, children } = props
+    const { title, backButton, backButtonText, children, backLink } = props
     const router = useRouter()
     const handleBack = () => {
-        router.back()
+        router.push(backLink || "/")
     }
     return (
         <div className="page-bar flex items-center justify-between px-2 py-3.5 md:px-6 ">

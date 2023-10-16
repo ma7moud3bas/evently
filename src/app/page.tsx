@@ -8,6 +8,7 @@ import { Session } from "@/utils/types"
 import Image from "next/image"
 import { Dispatch, useEffect, useReducer } from "react"
 import memoize from "lodash/memoize"
+import Pagination from "@/components/Pagination"
 
 const OFFSET = 10
 
@@ -37,36 +38,10 @@ type Action =
     }
   }
   | { type: 'failure', error: string }
-  | { type: "nextPage" }
-  | { type: "prevPage" }
   | { type: "goToPage", page: number }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case "nextPage": {
-      if (state.nextPage) {
-        return {
-          ...state,
-          prevPage: state.prevPage ? state.prevPage + 1 : 1,
-          nextPage: state.nextPage === state.pages ? null : state.nextPage + 1,
-          currentPage: state.currentPage + 1
-        }
-      } else {
-        return state
-      }
-    }
-    case "prevPage": {
-      if (state.prevPage) {
-        return {
-          ...state,
-          prevPage: state.prevPage === 1 ? null : state.prevPage - 1,
-          nextPage: state.nextPage ? state.nextPage - 1 : 2,
-          currentPage: state.currentPage - 1
-        }
-      } else {
-        return state
-      }
-    }
     case "goToPage": {
       if (action.page === state.currentPage || action.page > state.pages || action.page < 1) {
         return state
@@ -96,9 +71,9 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-const memoizedGetSessions = memoize(getSessions)
 
 const useLoadData = (dispatch: Dispatch<Action>, page: number) => {
+  const memoizedGetSessions = memoize(getSessions)
   useEffect(() => {
     (async function () {
       dispatch({ type: "request" })
@@ -137,27 +112,32 @@ export default function Home() {
   const { nextPage, prevPage, currentPage, pages, count } = state
   useLoadData(dispatch, state.currentPage)
   const goNext = () => {
-    dispatch({ type: "nextPage" })
+    dispatch({ type: "goToPage", page: state.currentPage + 1 })
   }
 
   const goPrev = () => {
-    dispatch({ type: "prevPage" })
+    dispatch({ type: "goToPage", page: state.currentPage - 1 })
+
   }
 
   const goTo = (page: number) => {
     dispatch({ type: "goToPage", page })
   }
+
   return (
     <div className="page-content overflow-hidden grow h-full flex flex-col bg-gray-1000 px-4">
       <PageBar title="All Sessions" backButton backButtonText="Events">
-        <Button href="/new" intent={"primary"}>
+        <Button href="/sessions/new" intent={"primary"}>
           <div className="flex items-center gap-x-2">
             <Image className="w-5 h-5" src={"/assets/images/plus-dark.svg"} alt="plus sign" width={24} height={24} />
             New Session
           </div>
         </Button>
       </PageBar>
-      <SessionsTable sessions={data}  {...{ isLoading, error, nextPage, prevPage, goNext, goTo, goPrev, currentPage, pages, count }} />
+      <div className="flex flex-col h-full overflow-y-auto w-full">
+        <SessionsTable sessions={data}  {...{ isLoading, error }} />
+        <Pagination {...{ isLoading, currentCount: data.length, nextPage, prevPage, currentPage, pages, count, goNext, goPrev, goTo }} />
+      </div>
     </div>
   )
 }
