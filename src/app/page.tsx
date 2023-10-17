@@ -1,113 +1,143 @@
-import Image from 'next/image'
+"use client"
+import SessionsTable from "@/components/SessionsTable"
+import Button from "@/components/UI/button"
+import PageBar from "@/components/UI/pageBar"
+import { getSessions } from "@/utils/api"
+import { defaultEventId } from "@/utils/constants"
+import { Session } from "@/utils/types"
+import Image from "next/image"
+import { Dispatch, useCallback, useEffect, useReducer } from "react"
+import memoize from "lodash/memoize"
+import Pagination from "@/components/Pagination"
+
+const OFFSET = 10
+
+type State = {
+  data: Session[]
+  isLoading: boolean
+  error?: string,
+  pages: number
+  nextPage: number | null
+  prevPage: number | null
+  currentPage: number
+  count: number
+}
+
+type Action =
+  | { type: 'request' }
+  | {
+    type: 'success', results: {
+      info: {
+        pages: number
+        count: number
+        nextPage: number | null
+        prevPage: number | null
+        currentPage: number
+      }
+      results: Session[]
+    }
+  }
+  | { type: 'failure', error: string }
+  | { type: "goToPage", page: number }
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "goToPage": {
+      if (action.page === state.currentPage || action.page > state.pages || action.page < 1) {
+        return state
+      }
+      return {
+        ...state,
+        prevPage: action.page === 1 ? null : action.page - 1,
+        nextPage: action.page === state.pages ? null : action.page + 1,
+        currentPage: action.page
+      }
+    }
+    case "request": {
+      return { ...state, isLoading: true }
+    };
+
+    case "success": {
+      return { ...state, isLoading: false, ...action.results.info, data: action.results.results }
+    };
+
+    case "failure": {
+      return { ...state, isLoading: false, error: action.error }
+    };
+
+    default: {
+      throw Error("Unknown Action")
+    }
+  }
+}
+
+
+const useLoadData = (dispatch: Dispatch<Action>, page: number) => {
+  const memoizedGetSessions = useCallback(memoize(getSessions), [])
+  useEffect(() => {
+    (async function () {
+      dispatch({ type: "request" })
+      try {
+        const data = await memoizedGetSessions(page, defaultEventId, 10)
+        if (data.sessions) {
+          const currentPage = data.is_last_offset ? Math.ceil(data.count / OFFSET) : (data.number / 10)
+          dispatch({
+            type: "success", results: {
+              info: {
+                currentPage: currentPage,
+                pages: Math.ceil(data.count / OFFSET) || 1,
+                count: data.count,
+                nextPage: data.is_last_offset ? null : currentPage + 1,
+                prevPage: currentPage === 1 ? null : currentPage - 1
+              },
+              results: data.sessions
+            }
+          })
+        }
+      } catch (err) {
+        console.error(err)
+        dispatch({ "type": "failure", error: "Something went wrong" })
+      }
+    })()
+  }, [page, dispatch])
+}
+
+
+const initialState: State = { isLoading: true, data: [], pages: 1, nextPage: null, prevPage: null, count: 0, currentPage: 1 }
+
 
 export default function Home() {
+  const [state, dispatch] = useReducer(reducer, initialState)
+  const { data, isLoading, error } = state;
+  const { nextPage, prevPage, currentPage, pages, count } = state
+  useLoadData(dispatch, state.currentPage)
+  const goNext = () => {
+    dispatch({ type: "goToPage", page: state.currentPage + 1 })
+  }
+
+  const goPrev = () => {
+    dispatch({ type: "goToPage", page: state.currentPage - 1 })
+
+  }
+
+  const goTo = (page: number) => {
+    dispatch({ type: "goToPage", page })
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div className="page-content overflow-hidden grow h-full flex flex-col bg-gray-1000 px-4">
+      <PageBar title="All Sessions" backButton backButtonText="Events">
+        <Button href="/sessions/new" intent={"primary"}>
+          <div className="flex items-center gap-x-2">
+            <Image className="w-5 h-5" src={"/assets/images/plus-dark.svg"} alt="plus sign" width={24} height={24} />
+            New Session
+          </div>
+        </Button>
+      </PageBar>
+      <div className="flex flex-col h-full overflow-y-auto w-full">
+        <SessionsTable sessions={data}  {...{ isLoading, error }} />
+        <Pagination {...{ isLoading, currentCount: data.length, nextPage, prevPage, currentPage, pages, count, goNext, goPrev, goTo }} />
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   )
 }

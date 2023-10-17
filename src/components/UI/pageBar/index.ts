@@ -1,0 +1,1 @@
+export { default, type Props as PageBarProps } from "./PageBar"
