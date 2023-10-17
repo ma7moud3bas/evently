@@ -73,7 +73,7 @@ function reducer(state: State, action: Action): State {
 
 
 const useLoadData = (dispatch: Dispatch<Action>, page: number) => {
-  const memoizedGetSessions = useCallback(memoize(getSessions), [])
+  const memoizedGetSessions = memoize(getSessions)
   useEffect(() => {
     (async function () {
       dispatch({ type: "request" })
