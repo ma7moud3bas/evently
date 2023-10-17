@@ -1,4 +1,4 @@
-import { useClickOutside } from "@/utils/hooks";
+import { useClickOutside } from "../../../utils/hooks";
 import classNames from "classnames"
 import Image from "next/image"
 import { useMemo, useRef, useState } from "react"
