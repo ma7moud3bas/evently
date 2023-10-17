@@ -6,7 +6,7 @@ import { getSessions } from "@/utils/api"
 import { defaultEventId } from "@/utils/constants"
 import { Session } from "@/utils/types"
 import Image from "next/image"
-import { Dispatch, useEffect, useReducer } from "react"
+import { Dispatch, useCallback, useEffect, useReducer } from "react"
 import memoize from "lodash/memoize"
 import Pagination from "@/components/Pagination"
 
@@ -73,7 +73,7 @@ function reducer(state: State, action: Action): State {
 
 
 const useLoadData = (dispatch: Dispatch<Action>, page: number) => {
-  const memoizedGetSessions = memoize(getSessions)
+  const memoizedGetSessions = useCallback(memoize(getSessions), [])
   useEffect(() => {
     (async function () {
       dispatch({ type: "request" })
@@ -99,7 +99,7 @@ const useLoadData = (dispatch: Dispatch<Action>, page: number) => {
         dispatch({ "type": "failure", error: "Something went wrong" })
       }
     })()
-  }, [page])
+  }, [page, dispatch])
 }
 
 

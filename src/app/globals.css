@@ -13,6 +13,7 @@ body {
   height:calc(100vh - 57px)
 }
 input[type="date"]::-webkit-calendar-picker-indicator, 
+input[type="datetime-local"]::-webkit-calendar-picker-indicator, 
 input[type="time"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
   margin-bottom: -14px;

@@ -4,10 +4,19 @@ import Sidebar, { SidebarProps } from "."
 export default {
     title: "UI/Sidebar",
     component: Sidebar,
+    tags: ["autodocs"],
 } as Meta<SidebarProps>
 
 type Story = StoryObj<SidebarProps>
 
-export const Primary: Story = {
-    args: {}
+export const TabletSidebar: Story = {
+    args: {
+        className: "w-28",
+    }
+}
+
+export const DesktopSidebar: Story = {
+    args: {
+        sidebarOpen: true
+    }
 } 

@@ -55,11 +55,10 @@ const ImageInput = (props: Props) => {
         }
         file.readAsDataURL(acceptedFiles[0])
         uploadImage(acceptedFiles[0])
-    }, [])
+    }, [uploadImage])
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        accept: Object.fromEntries(props.accept?.split(", ").map((type) => [type, [type.replace("image/", ".")]]) || [])
     });
 
     function handleOnChange(e: React.FormEvent<HTMLInputElement>) {

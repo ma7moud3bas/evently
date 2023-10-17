@@ -73,7 +73,7 @@ const initialLinks: Link[] = [
 ]
 
 export default function Sidebar(props: Props) {
-    const { sidebarOpen, setSidebarOpen, ...rest } = props
+    const { sidebarOpen, setSidebarOpen, className, ...rest } = props
     const [links, setLinks] = useState(initialLinks)
 
     const handleExpand = (index: number) => {
@@ -91,7 +91,7 @@ export default function Sidebar(props: Props) {
         if (!sidebarOpen) setSidebarOpen(true)
     }
     return (
-        <aside className={classNames("min-h-full bg-gray-800 pt-5 flex flex-col justify-between max-md:hidden ", rest.className)} {...rest}>
+        <aside className={classNames("min-h-full bg-gray-800 pt-5 flex flex-col justify-between max-md:hidden ", className)} {...rest}>
             <div className="px-4">
                 {links.map((link, index) => (
                     <Fragment key={index}>

@@ -8,6 +8,6 @@ export default {
 
 type Story = StoryObj<NavbarProps>
 
-export const Primary: Story = {
+export const navbar: Story = {
     args: {}
 } 

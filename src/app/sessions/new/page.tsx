@@ -2,7 +2,7 @@
 import SessionsForm from "@/components/SessionsForm";
 import Button from "@/components/UI/button";
 import PageBar from "@/components/UI/pageBar";
-import { FormEvent, useRef } from "react";
+import { useRef } from "react";
 
 export default function NewSession() {
     const handleSubmit = (values: { [key: string]: string }) => {

@@ -72,5 +72,6 @@ const SessionsForm = forwardRef((props: Props, ref: ForwardedRef<HTMLFormElement
         </form>
     )
 })
+SessionsForm.displayName = "SessionsForm";
 
 export default SessionsForm

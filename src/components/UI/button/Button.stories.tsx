@@ -20,7 +20,6 @@ type Story = StoryObj<ButtonProps>
 export const Primary: Story = {
     args: {
         intent: "primary",
-        fullWidth: true,
         children: "Button",
     },
 }
