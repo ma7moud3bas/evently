@@ -89,7 +89,7 @@ export default function SessionsTable(props: Props) {
                                 <td className="bg-gray-700 border-t border-b border-gray-600">
                                     <div className="flex items-center gap-x-2.5 py-4 px-6 ">
                                         <Image className="rounded-md h-9 w-9 object-cover" src={session.cover_image || "/assets/images/session-placeholder-image.png"} alt="play" width="34" height="34" />
-                                        <span className="text-[14px] text-white leading-5">
+                                        <span className="text-sm text-white leading-5">
                                             {session.title}
                                         </span>
                                     </div>

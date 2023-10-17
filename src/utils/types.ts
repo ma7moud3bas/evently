@@ -15,14 +15,14 @@ export type Session = {
 export type Venue = {
     id: string;
     name: string;
-    capacity: number;
+    description: string;
     image: string;
-    type: "stadium" | "other";
 }
 
 export type Speaker = {
     id: string;
     name: string;
+    description: string;
     image: string;
 }
 
@@ -30,5 +30,6 @@ export type Moderator = {
     id: string;
     name: string;
     image: string;
+    description: string;
 }
 

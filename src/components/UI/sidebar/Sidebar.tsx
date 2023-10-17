@@ -23,6 +23,7 @@ type Link = {
     link?: string;
     expanded?: boolean;
 }
+
 const initialLinks: Link[] = [
     {
         copy: "Home",
@@ -101,7 +102,7 @@ export default function Sidebar(props: Props) {
                                     <>
                                         <div className="flex gap-x-8 items-center">
                                             <Image src={link.iconSrc} alt={link.iconAlt} width={24} height={24} />
-                                            <span className="text-[14px] text-gray-200 leading-5">{link.copy}</span>
+                                            <span className="text-sm text-gray-200 leading-5">{link.copy}</span>
                                         </div>
                                         {link.expandable && <Image className={` ${link.expanded ? "rotate-180" : ""}`} src="/assets/images/chevron-down.svg" width="20" height="20" alt="arrow down" />}
                                     </>
@@ -118,7 +119,7 @@ export default function Sidebar(props: Props) {
                                 {
                                     link.children.map((child, index) => (
                                         <Link key={index} href={child.link} className="w-full">
-                                            <li className="pl-4 list-item w-full gap-x-8  marker:text-2xl items-center self-center py-1.5 px-2.5 cursor-pointer text-gray-400 hover:bg-gray-600 hover:text-white   text-[14px]">
+                                            <li className="pl-4 list-item w-full gap-x-8  marker:text-2xl items-center self-center py-1.5 px-2.5 cursor-pointer text-gray-400 hover:bg-gray-600 hover:text-white   text-sm">
                                                 <span className="ml-3.5">{child.copy}</span>
                                             </li>
                                         </Link>

@@ -27,7 +27,7 @@ export default function Navbar(props: Props) {
                     <div className="h-6 w-6 rounded-full bg-white flex items-center justify-center">
                         <Image className="h-4 w-4" src="/assets/images/champions-league-logo.jpeg" alt="champions league logo" height="330" width="330" />
                     </div>
-                    <span className="text-white font-bold text-[14px] ">
+                    <span className="text-white font-bold text-sm ">
                         Champions’ League 2023
                     </span>
                 </div>
@@ -39,7 +39,7 @@ export default function Navbar(props: Props) {
                 </div>
                 <div className="flex items-center justify-center gap-x-2 py-2.5 px-4 bg-primary-700">
                     <Image className="h-5 w-5 rounded-full" src={"/assets/images/user-image.png"} alt="user image" width="200" height="200" />
-                    <span className="text-white text-[14px] leading-5">Jane Doe</span>
+                    <span className="text-white text-sm leading-5">Jane Doe</span>
                     <Image src={"/assets/images/chevron-down.svg"} alt="arrow down" width="20" height="20" />
                 </div>
             </div>

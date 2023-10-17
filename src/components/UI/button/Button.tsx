@@ -5,7 +5,7 @@ import { ButtonOrLink, Props as ButtonOrLinkProps } from "../ButtonOrLink";
 import classNames from "classnames";
 
 const buttonStyles = cva(
-    "flex items-center px-4 py-2.5 border border-gray-700 text-[14px] font-bold",
+    "flex items-center px-4 py-2.5 border border-gray-700 text-sm font-bold",
     {
         variants: {
             intent: {

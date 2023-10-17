@@ -2,6 +2,8 @@ import ImageInput from "@/components/UI/ImageInput";
 import Input from "@/components/UI/input/Input";
 import { useFormik } from "formik";
 import { ForwardedRef, forwardRef, useState } from "react";
+import Dropdown from "./UI/dropdown";
+import { Moderators, Speakers, Venues } from "@/utils/dummyData";
 
 export interface Props {
     onSubmit: (values: { [key: string]: string }) => void
@@ -19,6 +21,9 @@ export interface Props {
 const SessionsForm = forwardRef((props: Props, ref: ForwardedRef<HTMLFormElement>) => {
     const { onSubmit } = props
     const [imageUrl, setImageUrl] = useState<string>(props.initialValues?.thumbnailUrl || "")
+    const [selectedSpeakers, setSelectedSpeakers] = useState<string[]>([])
+    const [selectedModerators, setSelectedModerators] = useState<string[]>([])
+    const [selectedVenues, setSelectedVenues] = useState<string[]>([])
     const validate = (values: { [key: string]: string }) => {
         // Can add any custom validation here
         const errors: { [key: string]: string } = {}
@@ -69,6 +74,9 @@ const SessionsForm = forwardRef((props: Props, ref: ForwardedRef<HTMLFormElement
                 <Input name="till" value={formik.values.till} onChange={formik.handleChange} type="time" label="Till" required />
             </div>
             <Input name="description" value={formik.values.description} onChange={formik.handleChange} type="textarea" label="Description" placeholder="Type details" required />
+            <Dropdown multiselect items={Speakers} selectedItems={selectedSpeakers} setSelectedItems={setSelectedSpeakers} selectedDisplayType="avatar" label="Speakers" />
+            <Dropdown multiselect items={Moderators} selectedItems={selectedModerators} setSelectedItems={setSelectedModerators} selectedDisplayType="avatar" label="Moderators" />
+            <Dropdown items={Venues} selectedItems={selectedVenues} setSelectedItems={setSelectedVenues} selectedDisplayType="image" label="Venue" />
         </form>
     )
 })

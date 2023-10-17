@@ -24,7 +24,7 @@ export default function PageBar(props: Props) {
                     backButton &&
                     <Link onClick={handleBack} className="flex items-center text-primary-400 gap-x-0.5 -ml-2 md:-ml-5">
                         <Image src="/assets/images/chevron-left-gray.svg" className="h-4 w-4" alt="back button" width="20" height="20" />
-                        <span className="text-[14px]">{backButtonText || "back"}</span>
+                        <span className="text-sm">{backButtonText || "back"}</span>
                     </Link>
                 }
                 <h2 className="text-xl font-bold text-white">{title}</h2>

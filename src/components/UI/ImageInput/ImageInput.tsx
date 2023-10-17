@@ -99,15 +99,15 @@ const ImageInput = (props: Props) => {
                         </div>
                         {
                             isDragActive ?
-                                <div className="text-[14px] text-gray-300 leading-5 mt-4">
+                                <div className="text-sm text-gray-300 leading-5 mt-4">
                                     Just drop here
                                 </div> :
-                                <div className="text-[14px] text-gray-300 leading-5 mt-4">
+                                <div className="text-sm text-gray-300 leading-5 mt-4">
                                     <span className="text-white font-bold">Click to upload </span>
                                     or drag and drop
                                 </div>
                         }
-                        <div className="text-[14px] text-gray-300 leading-5">
+                        <div className="text-sm text-gray-300 leading-5">
                             {placeholder}
                         </div>
                     </div>

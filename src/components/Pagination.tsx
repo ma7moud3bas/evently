@@ -17,7 +17,7 @@ const Pagination = (props: Props) => {
     const { nextPage, prevPage, goTo, goNext, goPrev, currentPage, pages, count, isLoading, currentCount } = props
     return (
         <div className={"sticky bottom-0 left-0 right-0 flex max-md:flex-col items-center justify-between p-2.5 bg-gray-900"}>
-            <div className="text-white text-[14px]">Showing {currentCount} entries of {count}</div>
+            <div className="text-white text-sm">Showing {currentCount} entries of {count}</div>
             <div className={classNames({ "pointer-events-none opacity-70": isLoading }, "flex items-stretch border-t border-b border-gray-700 text-white")}>
                 <div onClick={() => goPrev()} className={classNames({ "opacity-50 cursor-not-allowed": currentPage === 1 }, "p-2.5 border-l border-gray-700 cursor-pointer")}>
                     <Image src="/assets/images/chevron-left.svg" alt="arrow left" height={20} width={20} />
