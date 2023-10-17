@@ -5,19 +5,19 @@ import { useMemo, useRef, useState } from "react"
 import { Tooltip } from 'react-tooltip'
 import 'react-tooltip/dist/react-tooltip.css';
 
-
 export type Props = ({
     label: string
     tooltip?: string
     items: any[]
     multiselect?: boolean
     selectedItems: string[]
+    handleAddNew?: () => void
     setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>
     selectedDisplayType: "avatar" | "image"
 })
 
 const Dropdown = (props: Props) => {
-    const { selectedItems, setSelectedItems, selectedDisplayType, items, label, tooltip } = props
+    const { selectedItems, setSelectedItems, selectedDisplayType, items, label, tooltip, handleAddNew } = props
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const [search, setSearch] = useState("")
 
@@ -33,9 +33,6 @@ const Dropdown = (props: Props) => {
         if (selectedItems.includes(item.id)) { return false }
         return item.name.toLowerCase().includes(search.toLowerCase())
     }), [search, selectedItems])
-    const handleOpenNewSpeakerModal = () => {
-
-    }
 
     const handleSelectItem = (ItemId: string) => {
         if (props.multiselect) {
@@ -68,12 +65,15 @@ const Dropdown = (props: Props) => {
                         <input value={search} onChange={(e) => setSearch(e.target.value)} className="flex items-center justify-between w-full p-3 pt-3.5 bg-gray-700 border border-gray-400 border-b-0 text-gray-500 leading-6 focus:outline-none focus:ring-0 " type="search" placeholder="Search.." />
                         <Image onClick={() => setDropdownOpen(false)} className="absolute right-5 rotate-180" src={"/assets/images/chevron-down-dark.svg"} alt="arrow up" width="20" height="20" />
                         <div className="ItemsDropdown absolute z-10 max-h-[160px] overflow-auto top-[100%] w-full bg-gray-700 border border-gray-400 border-t-gray-600">
-                            <div onClick={handleOpenNewSpeakerModal} className="border-t-[0.5px] border-gray-600 flex items-center justify-between w-full px-5 py-3 text-gray-100 text-sm cursor-pointer hover:bg-gray-600">
-                                <span>
-                                    Add new {label.toLocaleLowerCase()}
-                                </span>
-                                <Image src={"/assets/images/plus.svg"} alt="plus" width="12" height="12" />
-                            </div>
+                            {
+                                handleAddNew &&
+                                <div onClick={() => { setDropdownOpen(false); handleAddNew(); }} className="border-t-[0.5px] border-gray-600 flex items-center justify-between w-full px-5 py-3 text-gray-100 text-sm cursor-pointer hover:bg-gray-600">
+                                    <span>
+                                        Add new {label.toLocaleLowerCase()}
+                                    </span>
+                                    <Image src={"/assets/images/plus.svg"} alt="plus" width="12" height="12" />
+                                </div>
+                            }
                             {filteredItems.map((item, index) => (
                                 <div key={item.id} onClick={() => handleSelectItem(item.id)} className="border-t-[0.5px] border-gray-600 flex items-center px-5 py-2 hover:bg-gray-600 cursor-pointer gap-x-2.5">
                                     <Image className="rounded-full object-cover h-[30px] w-[30px]" src={item.image} alt={item.name} height={30} width={30} />
@@ -90,10 +90,10 @@ const Dropdown = (props: Props) => {
                 }
 
                 <div className="selectedItem flex flex-col gap-y-1.5 w-full mt-2.5">
-                    {selectedItems.map((itemId, index) => {
+                    {selectedItems.map((itemId) => {
                         const item = items.find(el => el.id === itemId)
                         return (
-                            <div className="flex items-center gap-x-2.5  w-full grow-1">
+                            <div key={item.id} className="flex items-center gap-x-2.5  w-full grow-1">
                                 {
                                     selectedDisplayType === "avatar" ?
                                         <div key={item.id} onClick={() => handleSelectItem(item.id)} className="flex items-center border border-gray-500 px-4 md:px-6 py-2 bg-[#353535] cursor-pointer gap-x-2.5 w-full">
